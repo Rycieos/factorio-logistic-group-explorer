@@ -1,11 +1,15 @@
-function populate_logistic_group(player, group_name)
+function populate_logistic_group(player)
   local guis = storage.guis[player.index]
 
+  local group_name = guis.groups_list.get_item(guis.groups_list.selected_index)
   guis.group_label.caption = group_name
 
   local group = player.force.get_logistic_group(group_name)
-  if not group then return end
+  if not group then
+    return
+  end
 
+  guis.members_table.clear()
   for _, member in pairs(group.members) do
     if member.valid and member.is_manual then
       local name = member.owner.name
@@ -23,6 +27,7 @@ function populate_logistic_group(player, group_name)
     end
   end
 
+  guis.contents_table.clear()
   for _, filter in pairs(group.filters) do
     guis.contents_table.add({
       type = "sprite-button",

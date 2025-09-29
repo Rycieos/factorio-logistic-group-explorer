@@ -47,7 +47,22 @@ local function exit_remote_view(player)
   storage.player_view[player.index] = nil
 end
 
+local function is_interface_valid(player_index)
+  local guis = storage.guis[player_index]
+  return guis and guis.main and guis.main.valid
+end
+
+local function destroy_interface(player_index)
+  local guis = storage.guis[player_index]
+  if is_interface_valid(player_index) then
+    guis.main.destroy()
+  end
+  storage.guis[player_index] = nil
+end
+
 local function build_interface(player)
+  destroy_interface(player.index)
+
   local main_frame = player.gui.left.add({
     type = "flow",
     name = main_frame_id,
@@ -58,23 +73,22 @@ local function build_interface(player)
   local guis = { main = main_frame }
   storage.guis[player.index] = guis
 
-  local groups_frame =
-    main_frame.add({ type = "frame", name = "groups_frame", direction = "vertical", style = "right_side_frame" })
-  groups_frame.add({
-    type = "label",
-    name = "menu_header",
-    style = "frame_title",
+  local groups_frame = main_frame.add({
+    type = "frame",
+    name = "groups_frame",
+    direction = "vertical",
+    style = "right_side_frame",
     caption = {
       "logistic_group_explorer-name.logistic-groups",
     },
   })
-  local groups_list = groups_frame.add({
+  guis.groups_list = groups_frame.add({
     type = "list-box",
     name = "groups_list",
     direction = "vertical",
     items = player.force.get_logistic_groups(),
   })
-  groups_list.selected_index = 1
+  guis.groups_list.selected_index = 1
 
   local combo_frame =
     main_frame.add({ type = "frame", name = "combo_frame", direction = "vertical", style = "right_side_frame" })
@@ -122,21 +136,11 @@ local function build_interface(player)
     vertical_centering = false,
   })
 
-  populate_logistic_group(player, groups_list.get_item(1))
-end
-
-local function destroy_interface(player_index)
-  local frame = storage.guis[player_index]
-  if frame == nil then
-    return
-  end
-  if frame.valid then
-    frame.destroy()
-  end
-  storage.guis[player_index] = nil
+  populate_logistic_group(player)
 end
 
 local function toggle_interface(player)
+  log("toggle")
   if not storage.player_view or not storage.guis then
     init()
   end
@@ -156,7 +160,9 @@ script.on_event(toggle_interface_id, function(event)
 end)
 
 script.on_event(defines.events.on_gui_closed, function(event)
+  log("got gui close")
   if event.element and event.element.name == main_frame_id then
+    log("matched frame ID")
     local player = game.get_player(event.player_index)
     toggle_interface(player)
   end
@@ -174,3 +180,12 @@ script.on_configuration_changed(function(config_changed_data)
 end)
 
 script.on_init(init)
+
+script.on_event(defines.events.on_gui_selection_state_changed, function(event)
+  if event.element and event.element.name == "groups_list" then
+    local player = game.get_player(event.player_index)
+    if is_interface_valid(event.player_index) then
+      populate_logistic_group(player)
+    end
+  end
+end)
