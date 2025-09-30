@@ -106,9 +106,14 @@ local function build_interface(player)
     end
   end
 
-  local combo_frame =
-    main_frame.add({ type = "frame", name = "combo_frame", direction = "vertical", style = "right_side_frame" })
+  local combo_frame = main_frame.add({
+    type = "frame",
+    name = "combo_frame",
+    direction = "vertical",
+    style = "lge__right_side_frame_no_spacer",
+  })
   combo_frame.style.minimal_width = 40 * 6 + 12 + 16
+
   local group_header = combo_frame.add({ type = "flow", name = "group_header", style = "frame_header_flow" })
   guis.group_label = group_header.add({ type = "label", name = "group_label", style = "frame_title" })
   local combo_flow = combo_frame.add({

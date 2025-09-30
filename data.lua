@@ -19,3 +19,11 @@ data.raw["gui-style"]["default"].lge__subheader_frame_no_filler = {
     parent = "subheader_caption_label",
   },
 }
+data.raw["gui-style"]["default"].lge__right_side_frame_no_spacer = {
+  type = "frame_style",
+  parent = "right_side_frame",
+  vertical_flow_style = {
+    type = "vertical_flow_style",
+    vertical_spacing = 0,
+  },
+}
