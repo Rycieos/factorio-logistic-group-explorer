@@ -1,9 +1,11 @@
 require("const")
+util = require("scripts.util")
 require("scripts.logistic_groups")
 
 local function init()
   storage.player_view = {}
   storage.guis = {}
+  storage.last_group = {}
 end
 
 local function enter_remote_view(player)
@@ -87,14 +89,22 @@ local function build_interface(player)
   groups_frame.style.natural_height = main_frame.style.natural_height
   groups_frame.style.vertically_stretchable = true
 
+  local logistic_groups = player.force.get_logistic_groups()
   guis.groups_list = groups_frame.add({
     type = "list-box",
     name = "groups_list",
     direction = "vertical",
-    items = player.force.get_logistic_groups(),
+    items = logistic_groups,
   })
-  guis.groups_list.selected_index = 1
   guis.groups_list.style.vertically_stretchable = true
+
+  guis.groups_list.selected_index = 1
+  if storage.last_group[player.index] then
+    local last_group_index = util.find(logistic_groups, storage.last_group[player.index])
+    if last_group_index > 0 then
+      guis.groups_list.selected_index = last_group_index
+    end
+  end
 
   local combo_frame =
     main_frame.add({ type = "frame", name = "combo_frame", direction = "vertical", style = "right_side_frame" })
@@ -168,7 +178,7 @@ local function build_interface(player)
 end
 
 local function toggle_interface(player)
-  if not storage.player_view or not storage.guis then
+  if not storage.player_view or not storage.guis or not storage.last_group then
     init()
   end
 

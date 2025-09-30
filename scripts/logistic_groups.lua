@@ -2,6 +2,7 @@ function populate_logistic_group(player)
   local guis = storage.guis[player.index]
 
   local group_name = guis.groups_list.get_item(guis.groups_list.selected_index)
+  storage.last_group[player.index] = group_name
   guis.group_label.caption = group_name
 
   local group = player.force.get_logistic_group(group_name)
