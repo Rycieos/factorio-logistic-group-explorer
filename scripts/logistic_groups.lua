@@ -42,11 +42,12 @@ function populate_logistic_group(player)
 
       guis.members_table.add({
         type = "sprite-button",
-        style = "slot_button",
+        style = member.active and "slot_button" or "red_slot_button",
         sprite = "entity/" .. name,
         elem_tooltip = { type = "entity", name = name },
         tooltip = tooltip,
         toggled = false,
+        quality = entity.quality.name,
         tags = {
           surface = entity.surface_index,
           position = entity.position,
@@ -62,7 +63,6 @@ function populate_logistic_group(player)
       style = "slot_button",
       sprite = filter.value.type .. "/" .. filter.value.name,
       elem_tooltip = { type = filter.value.type, name = filter.value.name },
-      tooltip = { "None" },
       toggled = false,
       quality = filter.value.quality,
       number = filter.min,
