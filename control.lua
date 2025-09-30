@@ -25,7 +25,7 @@ end
 
 local function exit_remote_view(player)
   local player_view = storage.player_view[player.index]
-  if not player_view then
+  if not player_view or player_view.stay_in_remote_view then
     return
   end
 
@@ -237,6 +237,7 @@ script.on_event(defines.events.on_gui_click, function(event)
     })
     player.update_selected_entity(event.element.tags.position)
     if player.selected then
+      storage.player_view[event.player_index].stay_in_remote_view = true
       player.opened = player.selected
     end
   end
