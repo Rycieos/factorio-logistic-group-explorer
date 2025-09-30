@@ -47,6 +47,10 @@ function populate_logistic_group(player)
         elem_tooltip = { type = "entity", name = name },
         tooltip = tooltip,
         toggled = false,
+        tags = {
+          surface = entity.surface_index,
+          position = entity.position,
+        },
       })
     end
   end

@@ -222,3 +222,22 @@ script.on_event(defines.events.on_gui_selection_state_changed, function(event)
     end
   end
 end)
+
+script.on_event(defines.events.on_gui_click, function(event)
+  if not event.element then
+    return
+  end
+  local guis = storage.guis[event.player_index]
+  if event.element.parent == guis.members_table then
+    local player = game.get_player(event.player_index)
+    player.set_controller({
+      type = defines.controllers.remote,
+      surface = event.element.tags.surface,
+      position = event.element.tags.position,
+    })
+    player.update_selected_entity(event.element.tags.position)
+    if player.selected then
+      player.opened = player.selected
+    end
+  end
+end)
