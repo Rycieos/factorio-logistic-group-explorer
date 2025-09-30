@@ -21,15 +21,14 @@ function populate_logistic_group(player)
         style = "slot_button",
         sprite = "entity/" .. name,
         elem_tooltip = { type = "entity", name = name },
-        tooltip = { "None" },
         toggled = false,
       })
     end
   end
 
-  guis.contents_table.clear()
+  guis.filters_table.clear()
   for _, filter in pairs(group.filters) do
-    guis.contents_table.add({
+    guis.filters_table.add({
       type = "sprite-button",
       style = "slot_button",
       sprite = filter.value.type .. "/" .. filter.value.name,

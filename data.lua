@@ -8,3 +8,14 @@ data:extend({
     order = "a",
   },
 })
+
+data.raw["gui-style"]["default"].lge__subheader_frame_no_filler = {
+  type = "frame_style",
+  parent = "subheader_frame",
+  use_header_filler = false,
+  drag_by_title = false,
+  title_style = {
+    type = "label_style",
+    parent = "subheader_caption_label",
+  },
+}

@@ -68,6 +68,8 @@ local function build_interface(player)
     name = main_frame_id,
     style = "packed_horizontal_flow",
   })
+  main_frame.style.natural_height = 1160 / player.display_scale
+  main_frame.style.maximal_height = main_frame.style.natural_height
 
   player.opened = main_frame
   local guis = { main = main_frame }
@@ -82,6 +84,9 @@ local function build_interface(player)
       "logistic_group_explorer-name.logistic-groups",
     },
   })
+  groups_frame.style.natural_height = main_frame.style.natural_height
+  groups_frame.style.vertically_stretchable = true
+
   guis.groups_list = groups_frame.add({
     type = "list-box",
     name = "groups_list",
@@ -89,9 +94,11 @@ local function build_interface(player)
     items = player.force.get_logistic_groups(),
   })
   guis.groups_list.selected_index = 1
+  guis.groups_list.style.vertically_stretchable = true
 
   local combo_frame =
     main_frame.add({ type = "frame", name = "combo_frame", direction = "vertical", style = "right_side_frame" })
+  combo_frame.style.minimal_width = 40 * 6 + 12 + 16
   local group_header = combo_frame.add({ type = "flow", name = "group_header", style = "frame_header_flow" })
   guis.group_label = group_header.add({ type = "label", name = "group_label", style = "frame_title" })
   local combo_flow = combo_frame.add({
@@ -103,36 +110,57 @@ local function build_interface(player)
 
   local members_frame =
     combo_flow.add({ type = "frame", name = "members_frame", direction = "vertical", style = "inside_deep_frame" })
-  members_frame.add({
-    type = "label",
+  members_frame.style.maximal_height = main_frame.style.maximal_height / 2
+
+  local members_header = members_frame.add({
+    type = "frame",
     name = "members_header",
-    style = "subheader_caption_label",
+    style = "lge__subheader_frame_no_filler",
     caption = { "gui-logistic.members" },
   })
-  guis.members_table = members_frame.add({
+
+  local members_scroll_pane = members_frame.add({
+    type = "scroll-pane",
+    name = "members_scroll_pane",
+    direction = "vertical",
+    style = "logistic_gui_items_scroll_pane",
+    horizontal_scroll_policy = "never",
+    vertical_scroll_policy = "always",
+  })
+
+  guis.members_table = members_scroll_pane.add({
     type = "table",
     name = "members_table",
     style = "slot_table",
     column_count = 6,
-    draw_horizontal_lines = true,
-    draw_vertical_lines = true,
     vertical_centering = false,
   })
 
-  local contents_frame =
-    combo_flow.add({ type = "frame", name = "contents_frame", direction = "vertical", style = "inside_deep_frame" })
-  contents_frame.add({
-    type = "label",
-    name = "contents_header",
-    style = "subheader_caption_label",
+  local filters_frame =
+    combo_flow.add({ type = "frame", name = "filters_frame", direction = "vertical", style = "inside_deep_frame" })
+  filters_frame.style.vertically_stretchable = true
+
+  filters_frame.add({
+    type = "frame",
+    name = "filters_header",
+    style = "lge__subheader_frame_no_filler",
     caption = { "description.logistic-chest-filters" },
   })
-  guis.contents_table = contents_frame.add({
+  local filters_scroll_pane = filters_frame.add({
+    type = "scroll-pane",
+    name = "filters_scroll_pane",
+    direction = "vertical",
+    style = "logistic_gui_items_scroll_pane",
+    horizontal_scroll_policy = "never",
+    vertical_scroll_policy = "always",
+  })
+  filters_scroll_pane.style.vertically_stretchable = true
+
+  guis.filters_table = filters_scroll_pane.add({
     type = "table",
+    name = "filters_table",
     style = "slot_table",
     column_count = 6,
-    draw_horizontal_lines = true,
-    draw_vertical_lines = true,
     vertical_centering = false,
   })
 
@@ -140,7 +168,6 @@ local function build_interface(player)
 end
 
 local function toggle_interface(player)
-  log("toggle")
   if not storage.player_view or not storage.guis then
     init()
   end
@@ -160,9 +187,7 @@ script.on_event(toggle_interface_id, function(event)
 end)
 
 script.on_event(defines.events.on_gui_closed, function(event)
-  log("got gui close")
   if event.element and event.element.name == main_frame_id then
-    log("matched frame ID")
     local player = game.get_player(event.player_index)
     toggle_interface(player)
   end
@@ -180,6 +205,14 @@ script.on_configuration_changed(function(config_changed_data)
 end)
 
 script.on_init(init)
+
+script.on_event(defines.events.on_player_display_scale_changed, function(event)
+  if is_interface_valid(event.player_index) then
+    local player = game.get_player(event.player_index)
+    destroy_interface(player.index)
+    build_interface(player)
+  end
+end)
 
 script.on_event(defines.events.on_gui_selection_state_changed, function(event)
   if event.element and event.element.name == "groups_list" then
