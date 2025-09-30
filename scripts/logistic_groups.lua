@@ -12,15 +12,40 @@ function populate_logistic_group(player)
   guis.members_table.clear()
   for _, member in pairs(group.members) do
     if member.valid and member.is_manual then
-      local name = member.owner.name
-      if member.owner.type == "ghost" then
-        name = member.owner.ghost_name
+      local entity = member.owner
+      local name = entity.name
+      if entity.type == "ghost" then
+        name = entity.ghost_name
       end
+
+      surface = entity.surface
+      if surface.localised_name then
+        surface = surface.localised_name
+      elseif surface.planet then
+        surface = { "", "[planet=" .. surface.planet.name .. "] ", surface.planet.prototype.localised_name }
+      elseif surface.platform then
+        surface = "[space-platform=" .. surface.platform.index .. "] " .. surface.platform.name
+      else
+        surface = surface.name
+      end
+      tooltip = { "", "[font=default-semibold][color=cyan]", { "factoriopedia.surface" }, ":[/color][/font] ", surface }
+
+      if entity.type == "character" and entity.player then
+        table.insert(tooltip, {
+          "",
+          "\n[font=default-semibold][color=cyan]",
+          { "gui-players.name" },
+          ":[/color][/font] ",
+          entity.player.name,
+        })
+      end
+
       guis.members_table.add({
         type = "sprite-button",
         style = "slot_button",
         sprite = "entity/" .. name,
         elem_tooltip = { type = "entity", name = name },
+        tooltip = tooltip,
         toggled = false,
       })
     end
