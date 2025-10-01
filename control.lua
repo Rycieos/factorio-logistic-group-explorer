@@ -223,13 +223,17 @@ local function toggle_interface(player)
   end
 end
 
+local function is_event_valid(event)
+  return event.element and is_interface_valid(event.player_index)
+end
+
 script.on_event(toggle_interface_id, function(event)
   local player = game.get_player(event.player_index)
   toggle_interface(player)
 end)
 
 script.on_event(defines.events.on_gui_closed, function(event)
-  if event.element and event.element.name == main_frame_id then
+  if is_event_valid(event) and event.element.name == main_frame_id then
     local player = game.get_player(event.player_index)
     toggle_interface(player)
   end
@@ -249,7 +253,7 @@ end)
 script.on_init(init)
 
 script.on_event(defines.events.on_player_display_scale_changed, function(event)
-  if is_interface_valid(event.player_index) then
+  if is_event_valid(event) then
     local player = game.get_player(event.player_index)
     destroy_interface(player.index)
     build_interface(player)
@@ -257,7 +261,7 @@ script.on_event(defines.events.on_player_display_scale_changed, function(event)
 end)
 
 script.on_event(defines.events.on_gui_selection_state_changed, function(event)
-  if event.element and event.element.name == "groups_list" then
+  if is_event_valid(event) and event.element.name == "groups_list" then
     local player = game.get_player(event.player_index)
     if is_interface_valid(event.player_index) then
       populate_logistic_group(player)
@@ -266,7 +270,7 @@ script.on_event(defines.events.on_gui_selection_state_changed, function(event)
 end)
 
 script.on_event(defines.events.on_gui_click, function(event)
-  if not event.element then
+  if not is_event_valid(event) then
     return
   end
   local guis = storage.guis[event.player_index]
@@ -296,7 +300,7 @@ script.on_event(defines.events.on_gui_click, function(event)
 end)
 
 script.on_event(defines.events.on_gui_hover, function(event)
-  if not event.element then
+  if not is_event_valid(event) then
     return
   end
   local guis = storage.guis[event.player_index]
@@ -324,7 +328,7 @@ script.on_event(defines.events.on_gui_hover, function(event)
 end)
 
 script.on_event(defines.events.on_gui_leave, function(event)
-  if not event.element then
+  if not is_event_valid(event) then
     return
   end
   local guis = storage.guis[event.player_index]
