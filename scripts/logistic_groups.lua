@@ -1,5 +1,21 @@
+local function update_delete_button(player)
+  local guis = storage.guis[player.index]
+  local button = guis.group_delete_button
+
+  if
+    player.permission_group and not player.permission_group.allows_action(defines.input_action.delete_logistic_group)
+  then
+    button.enabled = false
+    return
+  end
+
+  button.enabled = guis.groups_list.selected_index > 0
+end
+
 function populate_logistic_group(player)
   local guis = storage.guis[player.index]
+
+  update_delete_button(player)
 
   if guis.groups_list.selected_index == 0 then
     return

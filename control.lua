@@ -130,6 +130,17 @@ local function build_interface(player)
 
   local group_header = combo_frame.add({ type = "flow", name = "group_header", style = "frame_header_flow" })
   guis.group_label = group_header.add({ type = "label", name = "group_label", style = "frame_title" })
+  local group_spacer = group_header.add({ type = "empty-widget", style = "empty_widget" })
+  group_spacer.style.horizontally_stretchable = true
+
+  guis.group_delete_button = group_header.add({
+    type = "sprite-button",
+    name = "group_delete_button",
+    style = "tool_button_red",
+    sprite = "utility/trash",
+    tooltip = { "gui-logistic.delete-logistic-group" },
+  })
+
   local combo_flow = combo_frame.add({
     type = "flow",
     name = "combo_flow",
@@ -258,8 +269,8 @@ script.on_event(defines.events.on_gui_click, function(event)
     return
   end
   local guis = storage.guis[event.player_index]
+  local player = game.get_player(event.player_index)
   if event.element.parent == guis.members_table then
-    local player = game.get_player(event.player_index)
     player.set_controller({
       type = defines.controllers.remote,
       surface = event.element.tags.surface,
@@ -270,5 +281,10 @@ script.on_event(defines.events.on_gui_click, function(event)
       storage.player_view[event.player_index].stay_in_remote_view = true
       player.opened = player.selected
     end
+  elseif event.element == guis.group_delete_button then
+    local group_name = guis.groups_list.get_item(guis.groups_list.selected_index)
+    player.force.delete_logistic_group(group_name)
+    storage.last_group[event.player_index] = nil
+    build_interface(player)
   end
 end)
