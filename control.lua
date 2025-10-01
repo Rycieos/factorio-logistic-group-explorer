@@ -131,6 +131,8 @@ local function build_interface(player)
 
   local group_header = combo_frame.add({ type = "flow", name = "group_header", style = "frame_header_flow" })
   guis.group_label = group_header.add({ type = "label", name = "group_label", style = "frame_title" })
+  guis.group_label.style.maximal_width = combo_frame.style.minimal_width - 8 - (24 + 16) * 2
+
   local group_spacer = group_header.add({ type = "empty-widget", style = "empty_widget" })
   group_spacer.style.horizontally_stretchable = true
 
@@ -140,6 +142,15 @@ local function build_interface(player)
     style = "tool_button_red",
     sprite = "utility/trash",
     tooltip = { "gui-logistic.delete-logistic-group" },
+  })
+  guis.group_delete_button.style.size = 24
+
+  guis.search_button = group_header.add({
+    type = "sprite-button",
+    name = "search_button",
+    style = "frame_action_button",
+    sprite = "utility/search",
+    tooltip = { "gui.search-with-focus", "__CONTROL__focus-search__" },
   })
 
   local combo_flow = combo_frame.add({

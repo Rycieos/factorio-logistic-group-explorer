@@ -7,6 +7,12 @@ data:extend({
     key_sequence = "CONTROL + L",
     order = "a",
   },
+  {
+    type = "custom-input",
+    name = focus_search_id,
+    key_sequence = "",
+    linked_game_control = "focus-search",
+  },
 })
 
 data.raw["gui-style"]["default"].lge__subheader_frame_no_filler = {
