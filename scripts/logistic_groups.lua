@@ -72,6 +72,7 @@ function populate_logistic_group(player)
         toggled = false,
         quality = entity.quality.name,
         tags = {
+          name = name,
           surface = entity.surface_index,
           position = entity.position,
           entity_index = index,
@@ -83,14 +84,19 @@ function populate_logistic_group(player)
 
   guis.filters_table.clear()
   for _, filter in pairs(group.filters) do
+    local obj = { type = filter.value.type, name = filter.value.name }
+
     guis.filters_table.add({
       type = "sprite-button",
       style = "slot_button",
-      sprite = filter.value.type .. "/" .. filter.value.name,
-      elem_tooltip = { type = filter.value.type, name = filter.value.name },
+      sprite = obj.type .. "/" .. obj.name,
+      elem_tooltip = obj,
       toggled = false,
       quality = filter.value.quality,
       number = filter.min,
+      tags = {
+        name = obj.name,
+      },
     })
   end
 end

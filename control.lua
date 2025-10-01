@@ -1,6 +1,7 @@
 require("const")
 util = require("scripts.util")
 require("scripts.logistic_groups")
+require("scripts.search")
 
 local function init()
   storage.player_view = {}
@@ -145,6 +146,12 @@ local function build_interface(player)
   })
   guis.group_delete_button.style.size = 24
 
+  guis.search_box = group_header.add({
+    type = "textfield",
+    name = "search_box",
+    style = "search_popup_textfield",
+    visible = false,
+  })
   guis.search_button = group_header.add({
     type = "sprite-button",
     name = "search_button",
@@ -276,9 +283,27 @@ script.on_event(defines.events.on_gui_selection_state_changed, function(event)
     local player = game.get_player(event.player_index)
     if is_interface_valid(event.player_index) then
       populate_logistic_group(player)
+      update_search_results(event.player_index)
     end
   end
 end)
+
+local function toggle_search_box(event)
+  local guis = storage.guis[event.player_index]
+  -- Poor man's overlay textbox.
+  if guis.search_box.visible then
+    guis.search_box.visible = false
+    guis.search_box.text = ""
+    update_search_results(event.player_index)
+    guis.group_delete_button.visible = true
+    guis.group_label.style.maximal_width = guis.group_label.style.maximal_width + (104 - 24)
+  else
+    guis.search_box.visible = true
+    guis.search_box.focus()
+    guis.group_delete_button.visible = false
+    guis.group_label.style.maximal_width = guis.group_label.style.maximal_width - (104 - 24)
+  end
+end
 
 script.on_event(defines.events.on_gui_click, function(event)
   if not is_event_valid(event) then
@@ -307,6 +332,14 @@ script.on_event(defines.events.on_gui_click, function(event)
     player.force.delete_logistic_group(group_name)
     storage.last_group[event.player_index] = nil
     build_interface(player)
+  elseif event.element == guis.search_button then
+    toggle_search_box(event)
+  end
+end)
+
+script.on_event(focus_search_id, function(event)
+  if is_interface_valid(event.player_index) then
+    toggle_search_box(event)
   end
 end)
 
@@ -345,5 +378,15 @@ script.on_event(defines.events.on_gui_leave, function(event)
   local guis = storage.guis[event.player_index]
   if event.element.parent == guis.members_table and guis.entity_preview and guis.entity_preview.valid then
     guis.entity_preview.destroy()
+  end
+end)
+
+script.on_event(defines.events.on_gui_text_changed, function(event)
+  if not is_event_valid(event) then
+    return
+  end
+  local guis = storage.guis[event.player_index]
+  if event.element == guis.search_box then
+    update_search_results(event.player_index)
   end
 end)
