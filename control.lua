@@ -6,6 +6,7 @@ local function init()
   storage.player_view = {}
   storage.guis = {}
   storage.last_group = {}
+  storage.entities = {}
 end
 
 local function enter_remote_view(player)
@@ -209,7 +210,7 @@ local function build_interface(player)
 end
 
 local function toggle_interface(player)
-  if not storage.player_view or not storage.guis or not storage.last_group then
+  if not storage.player_view or not storage.guis or not storage.last_group or not storage.entities then
     init()
   end
 
@@ -276,15 +277,58 @@ script.on_event(defines.events.on_gui_click, function(event)
       surface = event.element.tags.surface,
       position = event.element.tags.position,
     })
-    player.update_selected_entity(event.element.tags.position)
-    if player.selected then
+    local entity = storage.entities[event.player_index][event.element.tags.entity_index]
+    if entity and entity.valid and entity.operable and entity.type ~= "character" then
       storage.player_view[event.player_index].stay_in_remote_view = true
-      player.opened = player.selected
+      player.opened = entity
+    else
+      -- Close camera
+      if guis.entity_preview and guis.entity_preview.valid then
+        guis.entity_preview.destroy()
+      end
     end
   elseif event.element == guis.group_delete_button then
     local group_name = guis.groups_list.get_item(guis.groups_list.selected_index)
     player.force.delete_logistic_group(group_name)
     storage.last_group[event.player_index] = nil
     build_interface(player)
+  end
+end)
+
+script.on_event(defines.events.on_gui_hover, function(event)
+  if not event.element then
+    return
+  end
+  local guis = storage.guis[event.player_index]
+  local player = game.get_player(event.player_index)
+  local tags = event.element.tags
+  if event.element.parent == guis.members_table then
+    guis.entity_preview = guis.main.add({
+      type = "frame",
+      name = "entity_preview_frame",
+    })
+    local preview = guis.entity_preview.add({
+      type = "camera",
+      surface_index = tags.surface,
+      position = tags.position,
+      zoom = 1.5,
+    })
+    preview.style.size = 500
+
+    -- If we can locate the actual entity, tell the game to follow it.
+    local entity = storage.entities[event.player_index][tags.entity_index]
+    if entity and entity.valid then
+      preview.entity = entity
+    end
+  end
+end)
+
+script.on_event(defines.events.on_gui_leave, function(event)
+  if not event.element then
+    return
+  end
+  local guis = storage.guis[event.player_index]
+  if event.element.parent == guis.members_table and guis.entity_preview and guis.entity_preview.valid then
+    guis.entity_preview.destroy()
   end
 end)

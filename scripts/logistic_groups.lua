@@ -30,8 +30,9 @@ function populate_logistic_group(player)
     return
   end
 
+  storage.entities[player.index] = {}
   guis.members_table.clear()
-  for _, member in pairs(group.members) do
+  for index, member in pairs(group.members) do
     if member.valid and member.is_manual then
       local entity = member.owner
       local name = entity.name
@@ -61,6 +62,7 @@ function populate_logistic_group(player)
         })
       end
 
+      storage.entities[player.index][index] = entity
       guis.members_table.add({
         type = "sprite-button",
         style = member.active and "slot_button" or "red_slot_button",
@@ -72,7 +74,9 @@ function populate_logistic_group(player)
         tags = {
           surface = entity.surface_index,
           position = entity.position,
+          entity_index = index,
         },
+        raise_hover_events = true,
       })
     end
   end
