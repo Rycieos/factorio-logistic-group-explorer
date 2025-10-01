@@ -98,8 +98,22 @@ local function build_interface(player)
   })
   guis.groups_list.style.vertically_stretchable = true
 
+  if #logistic_groups == 0 then
+    guis.groups_list.selected_index = 0
+    local no_groups_message = guis.groups_list.add({
+      type = "frame",
+      name = "no_groups_message",
+      style = "negative_subheader_frame",
+      caption = { "", "[img=utility/warning_white] ", { "logistic_group_explorer-name.no-logistic-groups" } },
+    })
+    -- This element does not want to horizontally stretch.
+    -- This width is the width of the right_side_frame.
+    no_groups_message.style.natural_width = 40 * 6
+    return
+  end
+
   guis.groups_list.selected_index = 1
-  if storage.last_group[player.index] then
+  if storage.last_group and storage.last_group[player.index] then
     local last_group_index = util.find(logistic_groups, storage.last_group[player.index])
     if last_group_index > 0 then
       guis.groups_list.selected_index = last_group_index
@@ -142,6 +156,7 @@ local function build_interface(player)
     horizontal_scroll_policy = "never",
     vertical_scroll_policy = "always",
   })
+  members_scroll_pane.style.minimal_height = 40
 
   guis.members_table = members_scroll_pane.add({
     type = "table",
