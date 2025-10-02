@@ -1,30 +1,26 @@
+player_data = require("scripts.player_data")
+
 groups = {}
 
-local function update_delete_button(player)
-  local guis = storage.guis[player.index]
-  local button = guis.group_delete_button
+function groups.populate_logistic_group(player)
+  local data = player_data(player.index)
+  local guis = data.guis
 
+  local button = guis.group_delete_button
   if
     player.permission_group and not player.permission_group.allows_action(defines.input_action.delete_logistic_group)
   then
     button.enabled = false
-    return
+  else
+    button.enabled = guis.groups_list.selected_index > 0
   end
-
-  button.enabled = guis.groups_list.selected_index > 0
-end
-
-function groups.populate_logistic_group(player)
-  local guis = storage.guis[player.index]
-
-  update_delete_button(player)
 
   if guis.groups_list.selected_index == 0 then
     return
   end
 
   local group_name = guis.groups_list.get_item(guis.groups_list.selected_index)
-  storage.last_group[player.index] = group_name
+  data.last_group = group_name
   guis.group_label.caption = group_name
 
   local group = player.force.get_logistic_group(group_name)
@@ -32,7 +28,9 @@ function groups.populate_logistic_group(player)
     return
   end
 
-  storage.entities[player.index] = {}
+  local entities = {}
+  data.entities = entities
+
   guis.members_table.clear()
   for index, member in pairs(group.members) do
     if member.valid and member.is_manual then
@@ -64,7 +62,7 @@ function groups.populate_logistic_group(player)
         })
       end
 
-      storage.entities[player.index][index] = entity
+      entities[index] = entity
       guis.members_table.add({
         type = "sprite-button",
         style = member.active and "slot_button" or "red_slot_button",

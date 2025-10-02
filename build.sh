@@ -13,6 +13,7 @@ cp -r \
   ./changelog.txt \
   ./info.json \
   ./*.lua \
+  prototypes \
   scripts \
   locale \
   "$dir/"

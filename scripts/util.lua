@@ -1,7 +1,7 @@
 util = {}
 
 function util.find(table, element)
-  for index, value in ipairs(table) do
+  for index, value in pairs(table) do
     if value == element then
       return index
     end

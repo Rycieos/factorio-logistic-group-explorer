@@ -3,9 +3,7 @@ local to_lower_func = helpers.compare_versions(helpers.game_version, "2.0.67") >
 
 search = {}
 
-function search.update_search_results(player_index)
-  local guis = storage.guis[player_index]
-
+function search.update_search_results(guis)
   local query = guis.search_box.text
 
   for _, table in ipairs({ guis.members_table.children, guis.filters_table.children }) do
