@@ -1,6 +1,9 @@
 local mod_name = "logistic_group_explorer"
 
 return {
+  slot_size = 40,
+  slot_count = 10,
+
   mod_name = mod_name,
   mod_path = "__" .. mod_name .. "__",
 

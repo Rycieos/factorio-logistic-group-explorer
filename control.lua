@@ -72,7 +72,7 @@ local function build_interface(player)
     name = const.main_frame_id,
     style = "packed_horizontal_flow",
   })
-  main_frame.style.natural_height = 1160 / player.display_scale
+  main_frame.style.natural_height = 800 / player.display_scale
   main_frame.style.maximal_height = main_frame.style.natural_height
 
   player.opened = main_frame
@@ -110,7 +110,7 @@ local function build_interface(player)
     })
     -- This element does not want to horizontally stretch.
     -- This width is the width of the right_side_frame.
-    no_groups_message.style.natural_width = 40 * 6
+    no_groups_message.style.natural_width = const.slot_size * 6
     return
   end
 
@@ -128,7 +128,7 @@ local function build_interface(player)
     direction = "vertical",
     style = "lge__right_side_frame_no_spacer",
   })
-  combo_frame.style.minimal_width = 40 * 6 + 12 + 16
+  combo_frame.style.minimal_width = const.slot_size * const.slot_count + 12 + 16
 
   local group_header = combo_frame.add({ type = "flow", name = "group_header", style = "frame_header_flow" })
   guis.group_label = group_header.add({ type = "label", name = "group_label", style = "frame_title" })
@@ -182,17 +182,16 @@ local function build_interface(player)
     type = "scroll-pane",
     name = "members_scroll_pane",
     direction = "vertical",
-    style = "logistic_gui_items_scroll_pane",
+    style = "lge__logistic_items_scroll_pane",
     horizontal_scroll_policy = "never",
     vertical_scroll_policy = "always",
   })
-  members_scroll_pane.style.minimal_height = 40
 
   guis.members_table = members_scroll_pane.add({
     type = "table",
     name = "members_table",
     style = "slot_table",
-    column_count = 6,
+    column_count = const.slot_count,
     vertical_centering = false,
   })
 
@@ -210,7 +209,7 @@ local function build_interface(player)
     type = "scroll-pane",
     name = "filters_scroll_pane",
     direction = "vertical",
-    style = "logistic_gui_items_scroll_pane",
+    style = "lge__logistic_items_scroll_pane",
     horizontal_scroll_policy = "never",
     vertical_scroll_policy = "always",
   })
@@ -220,7 +219,7 @@ local function build_interface(player)
     type = "table",
     name = "filters_table",
     style = "slot_table",
-    column_count = 6,
+    column_count = const.slot_count,
     vertical_centering = false,
   })
 

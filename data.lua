@@ -35,3 +35,9 @@ style.lge__right_side_frame_no_spacer = {
     vertical_spacing = 0,
   },
 }
+style.lge__logistic_items_scroll_pane = {
+  type = "scroll_pane_style",
+  parent = "logistic_gui_items_scroll_pane",
+  width = const.slot_size * const.slot_count + 12,
+  minimal_height = const.slot_size,
+}
