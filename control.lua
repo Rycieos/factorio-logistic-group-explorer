@@ -14,7 +14,6 @@ local function enter_remote_view(player)
   storage.player_view[player.index] = {
     show_surface_list = player.game_view_settings.show_surface_list,
     controller = player.controller_type,
-    character = player.character,
   }
 
   -- Hide SurfaceList from RemoteView.
@@ -30,6 +29,7 @@ end
 local function exit_remote_view(player)
   local player_view = storage.player_view[player.index]
   if not player_view or player_view.stay_in_remote_view then
+    storage.player_view[player.index] = nil
     return
   end
 
@@ -41,10 +41,11 @@ local function exit_remote_view(player)
     controller_type
     and controller_type ~= defines.controllers.remote
     and controller_type ~= defines.controllers.cutscene
+    and (controller_type ~= defines.controllers.character or (player.character and player.character.valid))
   then
     player.set_controller({
       type = controller_type,
-      character = player_view.character,
+      character = player.character,
     })
   end
 
