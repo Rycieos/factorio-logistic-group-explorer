@@ -1,21 +1,23 @@
-require("const")
+const = require("const")
 
 data:extend({
   {
     type = "custom-input",
-    name = toggle_interface_id,
+    name = const.toggle_interface_id,
     key_sequence = "CONTROL + L",
     order = "a",
   },
   {
     type = "custom-input",
-    name = focus_search_id,
+    name = const.focus_search_id,
     key_sequence = "",
     linked_game_control = "focus-search",
   },
 })
 
-data.raw["gui-style"]["default"].lge__subheader_frame_no_filler = {
+local style = data.raw["gui-style"]["default"]
+
+style.lge__subheader_frame_no_filler = {
   type = "frame_style",
   parent = "subheader_frame",
   use_header_filler = false,
@@ -25,7 +27,7 @@ data.raw["gui-style"]["default"].lge__subheader_frame_no_filler = {
     parent = "subheader_caption_label",
   },
 }
-data.raw["gui-style"]["default"].lge__right_side_frame_no_spacer = {
+style.lge__right_side_frame_no_spacer = {
   type = "frame_style",
   parent = "right_side_frame",
   vertical_flow_style = {

@@ -1,3 +1,5 @@
+groups = {}
+
 local function update_delete_button(player)
   local guis = storage.guis[player.index]
   local button = guis.group_delete_button
@@ -12,7 +14,7 @@ local function update_delete_button(player)
   button.enabled = guis.groups_list.selected_index > 0
 end
 
-function populate_logistic_group(player)
+function groups.populate_logistic_group(player)
   local guis = storage.guis[player.index]
 
   update_delete_button(player)
@@ -112,3 +114,5 @@ function populate_logistic_group(player)
     end
   end
 end
+
+return groups

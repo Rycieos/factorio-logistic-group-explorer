@@ -1,7 +1,7 @@
-require("const")
+const = require("const")
 util = require("scripts.util")
-require("scripts.logistic_groups")
-require("scripts.search")
+groups = require("scripts.logistic_groups")
+search = require("scripts.search")
 
 local function init()
   storage.player_view = {}
@@ -69,7 +69,7 @@ local function build_interface(player)
 
   local main_frame = player.gui.left.add({
     type = "flow",
-    name = main_frame_id,
+    name = const.main_frame_id,
     style = "packed_horizontal_flow",
   })
   main_frame.style.natural_height = 1160 / player.display_scale
@@ -224,7 +224,7 @@ local function build_interface(player)
     vertical_centering = false,
   })
 
-  populate_logistic_group(player)
+  groups.populate_logistic_group(player)
 end
 
 local function toggle_interface(player)
@@ -245,20 +245,20 @@ local function is_event_valid(event)
   return event.element and is_interface_valid(event.player_index)
 end
 
-script.on_event(toggle_interface_id, function(event)
+script.on_event(const.toggle_interface_id, function(event)
   local player = game.get_player(event.player_index)
   toggle_interface(player)
 end)
 
 script.on_event(defines.events.on_gui_closed, function(event)
-  if is_event_valid(event) and event.element.name == main_frame_id then
+  if is_event_valid(event) and event.element.name == const.main_frame_id then
     local player = game.get_player(event.player_index)
     toggle_interface(player)
   end
 end)
 
 script.on_configuration_changed(function(config_changed_data)
-  if config_changed_data.mod_changes[mod_name] then
+  if config_changed_data.mod_changes[const.mod_name] then
     if storage.guis then
       for index, _ in pairs(storage.guis) do
         destroy_interface(index)
@@ -282,8 +282,8 @@ script.on_event(defines.events.on_gui_selection_state_changed, function(event)
   if is_event_valid(event) and event.element.name == "groups_list" then
     local player = game.get_player(event.player_index)
     if is_interface_valid(event.player_index) then
-      populate_logistic_group(player)
-      update_search_results(event.player_index)
+      groups.populate_logistic_group(player)
+      search.update_search_results(event.player_index)
     end
   end
 end)
@@ -294,7 +294,7 @@ local function toggle_search_box(event)
   if guis.search_box.visible then
     guis.search_box.visible = false
     guis.search_box.text = ""
-    update_search_results(event.player_index)
+    search.update_search_results(event.player_index)
     guis.group_delete_button.visible = true
     guis.group_label.style.maximal_width = guis.group_label.style.maximal_width + (104 - 24)
   else
@@ -337,7 +337,7 @@ script.on_event(defines.events.on_gui_click, function(event)
   end
 end)
 
-script.on_event(focus_search_id, function(event)
+script.on_event(const.focus_search_id, function(event)
   if is_interface_valid(event.player_index) then
     toggle_search_box(event)
   end
@@ -387,6 +387,6 @@ script.on_event(defines.events.on_gui_text_changed, function(event)
   end
   local guis = storage.guis[event.player_index]
   if event.element == guis.search_box then
-    update_search_results(event.player_index)
+    search.update_search_results(event.player_index)
   end
 end)
