@@ -295,11 +295,13 @@ local function toggle_search_box(event)
     guis.search_box.visible = false
     guis.search_box.text = ""
     search.update_search_results(event.player_index)
+    guis.search_button.toggled = false
     guis.group_delete_button.visible = true
     guis.group_label.style.maximal_width = guis.group_label.style.maximal_width + (104 - 24)
   else
     guis.search_box.visible = true
     guis.search_box.focus()
+    guis.search_button.toggled = true
     guis.group_delete_button.visible = false
     guis.group_label.style.maximal_width = guis.group_label.style.maximal_width - (104 - 24)
   end
