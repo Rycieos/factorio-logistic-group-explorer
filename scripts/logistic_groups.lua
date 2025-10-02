@@ -84,19 +84,31 @@ function populate_logistic_group(player)
 
   guis.filters_table.clear()
   for _, filter in pairs(group.filters) do
-    local obj = { type = filter.value.type, name = filter.value.name }
+    if filter.value then
+      -- Not an empty slot.
+      local obj = { type = filter.value.type, name = filter.value.name }
 
-    guis.filters_table.add({
-      type = "sprite-button",
-      style = "slot_button",
-      sprite = obj.type .. "/" .. obj.name,
-      elem_tooltip = obj,
-      toggled = false,
-      quality = filter.value.quality,
-      number = filter.min,
-      tags = {
-        name = obj.name,
-      },
-    })
+      guis.filters_table.add({
+        type = "sprite-button",
+        style = "slot_button",
+        sprite = obj.type .. "/" .. obj.name,
+        elem_tooltip = obj,
+        toggled = false,
+        quality = filter.value.quality,
+        number = filter.min,
+        tags = {
+          name = obj.name,
+        },
+      })
+    else
+      guis.filters_table.add({
+        type = "sprite-button",
+        style = "slot_button",
+        toggled = false,
+        tags = {
+          name = nil,
+        },
+      })
+    end
   end
 end

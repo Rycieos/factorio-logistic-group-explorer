@@ -8,8 +8,13 @@ function update_search_results(player_index)
 
   for _, table in ipairs({ guis.members_table.children, guis.filters_table.children }) do
     for _, member in pairs(table) do
-      log(serpent.block(member.tags))
-      member.visible = query == "" or string.find(to_lower_func(member.tags.name), to_lower_func(query), 1, true) ~= nil
+      if query == "" then
+        member.visible = true
+      elseif member.tags.name == nil then
+        member.visible = false
+      else
+        member.visible = string.find(to_lower_func(member.tags.name), to_lower_func(query), 1, true) ~= nil
+      end
     end
   end
 end
