@@ -101,7 +101,7 @@ local function build_interface(player)
   })
   guis.groups_list.style.vertically_stretchable = true
 
-  if #logistic_groups == 0 then
+  if table_size(logistic_groups) == 0 then
     guis.groups_list.selected_index = 0
     local no_groups_message = guis.groups_list.add({
       type = "frame",
@@ -343,10 +343,19 @@ script.on_event(const.focus_search_id, function(event)
   end
 end)
 
+function destroy_entity_preview(player_index)
+  local guis = storage.guis[player_index]
+  if guis.entity_preview and guis.entity_preview.valid then
+    guis.entity_preview.destroy()
+  end
+end
+
 script.on_event(defines.events.on_gui_hover, function(event)
   if not is_event_valid(event) then
     return
   end
+  destroy_entity_preview(event.player_index)
+
   local guis = storage.guis[event.player_index]
   local player = game.get_player(event.player_index)
   local tags = event.element.tags
@@ -361,7 +370,7 @@ script.on_event(defines.events.on_gui_hover, function(event)
       position = tags.position,
       zoom = 1.5,
     })
-    preview.style.size = 500
+    preview.style.size = math.min(500, guis.main.style.natural_height - 20)
 
     -- If we can locate the actual entity, tell the game to follow it.
     local entity = storage.entities[event.player_index][tags.entity_index]
@@ -376,8 +385,8 @@ script.on_event(defines.events.on_gui_leave, function(event)
     return
   end
   local guis = storage.guis[event.player_index]
-  if event.element.parent == guis.members_table and guis.entity_preview and guis.entity_preview.valid then
-    guis.entity_preview.destroy()
+  if event.element.parent == guis.members_table then
+    destroy_entity_preview(event.player_index)
   end
 end)
 
