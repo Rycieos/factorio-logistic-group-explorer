@@ -36,7 +36,7 @@ function groups.populate_logistic_group(player)
     if member.valid and member.is_manual then
       local entity = member.owner
       local name = entity.name
-      if entity.type == "ghost" then
+      if entity.type == "entity-ghost" then
         name = entity.ghost_name
       end
 
@@ -63,7 +63,7 @@ function groups.populate_logistic_group(player)
       end
 
       entities[index] = entity
-      guis.members_table.add({
+      local button = guis.members_table.add({
         type = "sprite-button",
         style = member.active and "slot_button" or "red_slot_button",
         sprite = "entity/" .. name,
@@ -79,6 +79,16 @@ function groups.populate_logistic_group(player)
         },
         raise_hover_events = true,
       })
+      if entity.type == "entity-ghost" then
+        local ghost_icon = button.add({
+          type = "sprite",
+          sprite = "entity/entity-ghost",
+          resize_to_sprite = false,
+        })
+        -- Hack to get it farther into the top-left corner.
+        ghost_icon.style.padding = { -4, 4, 4, -4 }
+        ghost_icon.style.size = 20
+      end
     end
   end
 
