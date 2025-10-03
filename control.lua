@@ -122,3 +122,17 @@ script.on_event(defines.events.on_gui_text_changed, function(event)
     search.update_search_results(guis)
   end
 end)
+
+script.on_event(defines.events.on_entity_logistic_slot_changed, function(event)
+  local group = event.section.group
+  if not event.section.is_manual or group == "" then
+    return
+  end
+
+  local players = event.entity.force.connected_players
+  for _, player in pairs(players) do
+    if player_data(player.index).last_group == group and main_gui.valid(player.index) then
+      groups.populate_logistic_group(player)
+    end
+  end
+end)
