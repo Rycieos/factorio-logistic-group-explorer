@@ -13,15 +13,22 @@ local function is_event_valid(event)
   return event.element and main_gui.valid(event.player_index)
 end
 
-script.on_event(const.toggle_interface_id, function(event)
+local function toggle(event)
   local player = game.get_player(event.player_index)
   main_gui.toggle(player)
+end
+
+script.on_event(const.toggle_interface_id, toggle)
+
+script.on_event(defines.events.on_lua_shortcut, function(event)
+  if event.prototype_name == const.toggle_interface_shortcut then
+    toggle(event)
+  end
 end)
 
 script.on_event(defines.events.on_gui_closed, function(event)
   if is_event_valid(event) and event.element.name == const.main_frame_id then
-    local player = game.get_player(event.player_index)
-    main_gui.toggle(player)
+    toggle(event)
   end
 end)
 

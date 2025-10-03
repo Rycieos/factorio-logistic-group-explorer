@@ -9,6 +9,7 @@ return {
   main_frame_id = mod_name .. "_main_frame",
 
   toggle_interface_id = mod_name .. "_toggle_interface",
+  toggle_interface_shortcut = mod_name .. "_toggle_interface_shortcut",
   focus_search_id = mod_name .. "_focus_search",
 
   subheader_no_filler_frame = mod_name .. "_subheader_no_filler_frame",
