@@ -6,7 +6,7 @@ function remote_view.enter(player)
   player_data(player.index).player_view = {
     show_surface_list = player.game_view_settings.show_surface_list,
     controller = player.controller_type,
-    exit_remote_view = false,
+    exit_remote_view = true,
   }
 
   -- Hide SurfaceList from RemoteView.
@@ -21,11 +21,12 @@ end
 
 function remote_view.exit(player)
   local player_view = player_data(player.index).player_view
+
+  player.game_view_settings.show_surface_list = player_view.show_surface_list
+
   if not player_view.exit_remote_view then
     return
   end
-
-  player.game_view_settings.show_surface_list = player_view.show_surface_list
 
   local controller_type = player_view.controller
   -- Cutscene requires data that we do not have, so we can't restore it.
