@@ -26,3 +26,9 @@ style[const.logistic_items_scroll_pane] = {
   width = const.slot_size * const.slot_count + 12,
   minimal_height = const.slot_size,
 }
+style[const.no_hover_count_label] = {
+  type = "label_style",
+  parent = "count_label",
+  parent_hovered_font_color = { 1, 1, 1 },
+  rich_text_setting = "disabled",
+}

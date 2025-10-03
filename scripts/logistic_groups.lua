@@ -1,4 +1,5 @@
 player_data = require("scripts.player_data")
+util = require("scripts.util")
 
 groups = {}
 
@@ -98,18 +99,69 @@ function groups.populate_logistic_group(player)
       -- Not an empty slot.
       local obj = { type = filter.value.type, name = filter.value.name }
 
-      guis.filters_table.add({
+      local button = guis.filters_table.add({
         type = "sprite-button",
         style = "slot_button",
         sprite = obj.type .. "/" .. obj.name,
         elem_tooltip = obj,
         toggled = false,
-        quality = filter.value.quality,
         number = filter.min,
         tags = {
           name = obj.name,
         },
       })
+
+      local quality = filter.value.quality
+      local quality_sprite = nil
+      if not quality then
+        quality_sprite = "utility/any_quality"
+      elseif prototypes.quality[quality].draw_sprite_by_default then
+        quality_sprite = "quality/" .. quality
+      end
+
+      if quality_sprite or filter.max then
+        local flow = button.add({
+          type = "flow",
+          direction = "vertical",
+        })
+
+        local max_count = flow.add({
+          type = "label",
+          style = const.no_hover_count_label,
+          caption = filter.max and util.format_number(filter.max) or nil,
+          ignored_by_interaction = true,
+        })
+        max_count.style.width = 33
+        max_count.style.top_margin = 4
+        max_count.style.horizontal_align = "right"
+
+        if quality_sprite then
+          local quality_flow = flow.add({
+            type = "flow",
+            direction = "horizontal",
+          })
+          quality_flow.style.top_margin = -10
+
+          if filter.value.comparator and filter.value.comparator ~= "=" then
+            local comparator_label = quality_flow.add({
+              type = "label",
+              style = const.no_hover_count_label,
+              caption = filter.value.comparator,
+              ignored_by_interaction = true,
+            })
+            comparator_label.style.height = 8
+            comparator_label.style.right_margin = -4
+          end
+
+          local quality_icon = quality_flow.add({
+            type = "sprite",
+            sprite = quality_sprite,
+            resize_to_sprite = false,
+            ignored_by_interaction = true,
+          })
+          quality_icon.style.size = 14
+        end
+      end
     else
       guis.filters_table.add({
         type = "sprite-button",

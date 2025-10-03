@@ -14,4 +14,5 @@ return {
   subheader_no_filler_frame = mod_name .. "_subheader_no_filler_frame",
   right_side_no_spacer_frame = mod_name .. "_right_side_no_spacer_frame",
   logistic_items_scroll_pane = mod_name .. "_logistic_items_scroll_pane",
+  no_hover_count_label = mod_name .. "_no_hover_count_label",
 }
