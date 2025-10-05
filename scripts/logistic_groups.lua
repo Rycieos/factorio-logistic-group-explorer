@@ -98,7 +98,7 @@ function groups.populate_logistic_group(player)
   for _, filter in pairs(group.filters) do
     if filter.value then
       -- Not an empty slot.
-      local obj = { type = filter.value.type, name = filter.value.name }
+      local obj = { type = filter.value.type, name = filter.value.name, quality = filter.value.quality }
 
       local button = guis.filters_table.add({
         type = "sprite-button",
