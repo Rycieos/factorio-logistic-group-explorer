@@ -1,13 +1,13 @@
 {
   "name": "logistic_group_explorer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Logistic Group Explorer",
   "author": "rycieos",
   "factorio_version": "2.0",
   "dependencies": [
       "? base >= 2.0.58"
   ],
-  "description": "TODO",
+  "description": "A GUI to list logistics groups, view entities that have that group set, and view the filters of the group.",
   "homepage": "https://github.com/Rycieos/factorio-logistic-group-explorer",
   "contact": "https://github.com/Rycieos/factorio-logistic-group-explorer/issues/new/choose"
 }
