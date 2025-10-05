@@ -51,14 +51,14 @@ function groups.populate_logistic_group(player)
       else
         surface = surface.name
       end
-      tooltip = { "", "[font=default-semibold][color=cyan]", { "factoriopedia.surface" }, ":[/color][/font] ", surface }
+      local tooltip = { "", "[font=default-semibold]", { "factoriopedia.surface" }, ":[/font] ", surface }
 
       if entity.type == "character" and entity.player then
         table.insert(tooltip, {
           "",
-          "\n[font=default-semibold][color=cyan]",
+          "\n[font=default-semibold]",
           { "gui-players.name" },
-          ":[/color][/font] ",
+          ":[/font] ",
           entity.player.name,
         })
       end
@@ -100,11 +100,43 @@ function groups.populate_logistic_group(player)
       -- Not an empty slot.
       local obj = { type = filter.value.type, name = filter.value.name, quality = filter.value.quality }
 
+      local tooltip = nil
+
+      -- import_from will always show some planet, even if running without an expansion binary.
+      if script.feature_flags.space_travel then
+        tooltip = { "" }
+        if filter.minimum_delivery_count then
+          table.insert(tooltip, {
+            "",
+            "[font=default-semibold]",
+            { "gui-orbital-request.custom-minimal-payload" },
+            ":[/font] ",
+            filter.minimum_delivery_count,
+          })
+          if filter.import_from then
+            table.insert(tooltip, "\n")
+          end
+        end
+
+        if filter.import_from then
+          table.insert(tooltip, {
+            "",
+            "[font=default-semibold]",
+            { "gui-orbital-request.import-from" },
+            ":[/font] [space-location=",
+            filter.import_from.name,
+            "] ",
+            filter.import_from.localised_name,
+          })
+        end
+      end
+
       local button = guis.filters_table.add({
         type = "sprite-button",
         style = "slot_button",
         sprite = obj.type .. "/" .. obj.name,
         elem_tooltip = obj,
+        tooltip = tooltip,
         toggled = false,
         number = filter.min,
         tags = {
