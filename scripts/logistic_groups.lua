@@ -37,8 +37,11 @@ function groups.populate_logistic_group(player)
     if member.valid and member.is_manual then
       local entity = member.owner
       local name = entity.name
+      -- Add localised_name for searching.
+      local localised_name = entity.localised_name
       if entity.type == "entity-ghost" then
         name = entity.ghost_name
+        localised_name = entity.ghost_localised_name
       end
 
       surface = entity.surface
@@ -75,6 +78,7 @@ function groups.populate_logistic_group(player)
         quality = entity.quality.name,
         tags = {
           name = name,
+          localised_name = localised_name,
           surface = entity.surface_index,
           position = entity.position,
           entity_index = index,
@@ -131,6 +135,13 @@ function groups.populate_logistic_group(player)
         end
       end
 
+      -- Add localised_name for searching.
+      local localised_name = nil
+      local type_prototypes = prototypes[obj.type]
+      if type_prototypes and type_prototypes[obj.name] then
+        localised_name = type_prototypes[obj.name].localised_name
+      end
+
       local button = guis.filters_table.add({
         type = "sprite-button",
         style = "slot_button",
@@ -141,6 +152,7 @@ function groups.populate_logistic_group(player)
         number = filter.min,
         tags = {
           name = obj.name,
+          localised_name = localised_name,
         },
       })
 

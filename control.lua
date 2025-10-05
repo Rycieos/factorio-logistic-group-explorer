@@ -55,7 +55,7 @@ script.on_event(defines.events.on_gui_selection_state_changed, function(event)
   if is_event_valid(event) and event.element == guis.groups_list then
     local player = game.get_player(event.player_index)
     groups.populate_logistic_group(player)
-    search.update_search_results(guis)
+    search.update_search_results(guis, player)
   end
 end)
 
@@ -65,7 +65,8 @@ local function toggle_search_box(guis)
     guis.search_box.visible = false
     guis.search_box.text = ""
     -- The above line does not trigger an event.
-    search.update_search_results(guis)
+    -- No need to pass a player as no query means no translation requests.
+    search.update_search_results(guis, nil)
     guis.search_button.toggled = false
     guis.group_delete_button.visible = true
     guis.group_label.style.maximal_width = guis.group_label.style.maximal_width + (104 - 24)
@@ -106,6 +107,13 @@ script.on_event(const.focus_search_id, function(event)
   end
 end)
 
+script.on_event(defines.events.on_string_translated, function(event)
+  if event.translated and main_gui.valid(event.player_index) then
+    local guis = player_data(event.player_index).guis
+    search.update_string_translation(guis, event)
+  end
+end)
+
 script.on_event({ defines.events.on_gui_hover, defines.events.on_gui_leave }, function(event)
   if not is_event_valid(event) then
     return
@@ -126,7 +134,8 @@ script.on_event(defines.events.on_gui_text_changed, function(event)
   end
   local guis = player_data(event.player_index).guis
   if event.element == guis.search_box then
-    search.update_search_results(guis)
+    local player = game.get_player(event.player_index)
+    search.update_search_results(guis, player)
   end
 end)
 
