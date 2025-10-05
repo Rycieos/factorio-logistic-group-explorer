@@ -1,3 +1,4 @@
+const = require("const")
 player_data = require("scripts.player_data")
 util = require("scripts.util")
 
@@ -144,7 +145,7 @@ function groups.populate_logistic_group(player)
 
       local button = guis.filters_table.add({
         type = "sprite-button",
-        style = "slot_button",
+        style = const.no_click_slot_button,
         sprite = obj.type .. "/" .. obj.name,
         elem_tooltip = obj,
         tooltip = tooltip,
