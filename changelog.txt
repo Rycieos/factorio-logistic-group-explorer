@@ -1,3 +1,15 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2025-10-06
+  Bugfixes:
+    - Fix crash on virtual signals.
+    - Fix tooltips not including entity/item quality.
+    - Fix shortcut icon not matching default shortcuts.
+
+  Locale:
+    - Missing string in controls settings.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2025-10-05
   Major Features:

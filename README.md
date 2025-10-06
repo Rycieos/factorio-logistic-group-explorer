@@ -15,6 +15,9 @@ Features include:
 * Search box that filters group entities and group filters by name.
 * Deleting a logistic group.
 
+Does NOT include editing the filters of a group due to limitations of the
+modding API. Please edit the filters by opening an entity in the group.
+
 ![Thumbnail](https://raw.githubusercontent.com/Rycieos/factorio-logistic-group-explorer/main/thumbnail.png)
 
 ### Getting help
