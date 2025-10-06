@@ -1,5 +1,6 @@
 const = require("const")
 player_data = require("scripts.player_data")
+signal_util = require("scripts.signal_util")
 util = require("scripts.util")
 
 groups = {}
@@ -102,8 +103,6 @@ function groups.populate_logistic_group(player)
   for _, filter in pairs(group.filters) do
     if filter.value then
       -- Not an empty slot.
-      local obj = { type = filter.value.type, name = filter.value.name, quality = filter.value.quality }
-
       local tooltip = nil
 
       -- import_from will always show some planet, even if running without an expansion binary.
@@ -136,23 +135,19 @@ function groups.populate_logistic_group(player)
       end
 
       -- Add localised_name for searching.
-      local localised_name = nil
-      local type_prototypes = prototypes[obj.type]
-      if type_prototypes and type_prototypes[obj.name] then
-        localised_name = type_prototypes[obj.name].localised_name
-      end
+      local type_prototype = signal_util.to_prototype(filter.value)
 
       local button = guis.filters_table.add({
         type = "sprite-button",
         style = const.no_click_slot_button,
-        sprite = obj.type .. "/" .. obj.name,
-        elem_tooltip = obj,
+        sprite = signal_util.to_sprite_path(filter.value),
+        elem_tooltip = signal_util.to_elem_id(filter.value),
         tooltip = tooltip,
         toggled = false,
         number = filter.min,
         tags = {
-          name = obj.name,
-          localised_name = localised_name,
+          name = type_prototype.name,
+          localised_name = type_prototype.localised_name,
         },
       })
 
