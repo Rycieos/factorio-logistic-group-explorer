@@ -6,6 +6,12 @@ data:extend({
     name = const.toggle_interface_id,
     key_sequence = "CONTROL + L",
     order = "a",
+    localised_name = {
+      "",
+      { "gui-permissions-names.OpenGui" },
+      " ",
+      { "logistic_group_explorer-name.logistic-groups" },
+    },
   },
   {
     type = "shortcut",
