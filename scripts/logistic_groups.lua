@@ -72,8 +72,7 @@ function groups.populate_logistic_group(player)
         type = "sprite-button",
         style = member.active and "slot_button" or "red_slot_button",
         sprite = "entity/" .. name,
-        -- As of v2.0.69 quality here does nothing.
-        elem_tooltip = { type = "entity", name = name, quality = entity.quality.name },
+        elem_tooltip = { type = "entity-with-quality", name = name, quality = entity.quality.name },
         tooltip = tooltip,
         toggled = false,
         quality = entity.quality.name,
