@@ -1,5 +1,13 @@
 const = require("const")
 
+local shortcut_icons = {
+  {
+    icon = "__core__/graphics/icons/mip/logistic-connection.png",
+    icon_size = 32,
+    tint = { 0, 0, 0 },
+  },
+}
+
 data:extend({
   {
     type = "custom-input",
@@ -19,10 +27,8 @@ data:extend({
     action = "lua",
     associated_control_input = const.toggle_interface_id,
     hidden_in_factoriopedia = true,
-    icon = "__core__/graphics/icons/mip/logistic-connection.png",
-    icon_size = 32,
-    small_icon = "__core__/graphics/icons/mip/logistic-connection.png",
-    small_icon_size = 32,
+    icons = shortcut_icons,
+    small_icons = shortcut_icons,
     localised_name = { "logistic_group_explorer-name.logistic-groups" },
   },
   {
