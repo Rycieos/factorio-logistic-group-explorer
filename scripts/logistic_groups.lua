@@ -1,9 +1,9 @@
-const = require("const")
-player_data = require("scripts.player_data")
-signal_util = require("scripts.signal_util")
-util = require("scripts.util")
+local const = require("const")
+local player_data = require("scripts.player_data")
+local signal_util = require("scripts.signal_util")
+local util = require("scripts.util")
 
-groups = {}
+local groups = {}
 
 function groups.populate_logistic_group(player)
   local data = player_data(player.index)

@@ -1,6 +1,6 @@
-player_data = require("scripts.player_data")
+local player_data = require("scripts.player_data")
 
-remote_view = {}
+local remote_view = {}
 
 function remote_view.enter(player)
   player_data(player.index).player_view = {

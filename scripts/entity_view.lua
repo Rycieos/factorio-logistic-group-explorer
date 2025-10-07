@@ -1,6 +1,6 @@
-player_data = require("scripts.player_data")
+local player_data = require("scripts.player_data")
 
-entity_view = {}
+local entity_view = {}
 
 function entity_view.destroy(player_index)
   local guis = player_data(player_index).guis

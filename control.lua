@@ -1,9 +1,9 @@
-const = require("const")
-groups = require("scripts.logistic_groups")
-search = require("scripts.search")
-entity_view = require("scripts.entity_view")
-player_data = require("scripts.player_data")
-main_gui = require("scripts.main_gui")
+local const = require("const")
+local groups = require("scripts.logistic_groups")
+local search = require("scripts.search")
+local entity_view = require("scripts.entity_view")
+local player_data = require("scripts.player_data")
+local main_gui = require("scripts.main_gui")
 
 script.on_init(function()
   storage.player_data = {}
@@ -87,7 +87,7 @@ script.on_event(defines.events.on_gui_click, function(event)
   local player = game.get_player(event.player_index)
   if event.element.parent == guis.members_table then
     entity_view.jump(player, event.element.tags)
-  elseif event.element == guis.group_delete_button then
+  elseif event.element == guis.group_delete_button and player then
     local group_name = guis.groups_list.get_item(guis.groups_list.selected_index)
     player.force.delete_logistic_group(group_name)
     main_gui.build(player)
@@ -96,6 +96,7 @@ script.on_event(defines.events.on_gui_click, function(event)
   end
 end)
 
+---@param event EventData.CustomInputEvent
 script.on_event(const.focus_search_id, function(event)
   if main_gui.valid(event.player_index) then
     local guis = player_data(event.player_index).guis
@@ -114,6 +115,7 @@ script.on_event(defines.events.on_string_translated, function(event)
   end
 end)
 
+---@param event EventData.on_gui_hover | EventData.on_gui_leave
 script.on_event({ defines.events.on_gui_hover, defines.events.on_gui_leave }, function(event)
   if not is_event_valid(event) then
     return

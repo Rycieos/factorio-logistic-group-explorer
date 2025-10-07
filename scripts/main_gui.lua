@@ -1,10 +1,10 @@
-const = require("const")
-groups = require("scripts.logistic_groups")
-player_data = require("scripts.player_data")
-remote_view = require("scripts.remote_view")
-util = require("scripts.util")
+local const = require("const")
+local groups = require("scripts.logistic_groups")
+local player_data = require("scripts.player_data")
+local remote_view = require("scripts.remote_view")
+local util = require("scripts.util")
 
-main_gui = {}
+local main_gui = {}
 
 function main_gui.valid(player_index)
   local guis = player_data(player_index).guis

@@ -1,4 +1,4 @@
-util = {}
+local util = {}
 
 function util.find(table, element)
   for index, value in pairs(table) do

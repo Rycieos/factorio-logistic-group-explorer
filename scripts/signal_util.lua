@@ -1,4 +1,4 @@
-signal_util = {}
+local signal_util = {}
 
 -- Input for all functions:
 -- https://lua-api.factorio.com/stable/concepts/SignalFilter.html

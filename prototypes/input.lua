@@ -1,4 +1,4 @@
-const = require("const")
+local const = require("const")
 
 local shortcut_icons = {
   {

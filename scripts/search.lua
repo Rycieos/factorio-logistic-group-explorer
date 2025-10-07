@@ -1,7 +1,7 @@
 local to_lower_func = helpers.compare_versions(helpers.game_version, "2.0.67") >= 0 and helpers.multilingual_to_lower
   or string.lower
 
-search = {}
+local search = {}
 
 function search.update_search_results(guis, player)
   local query = guis.search_box.text
