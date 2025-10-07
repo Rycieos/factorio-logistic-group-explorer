@@ -1,43 +1,11 @@
 local signal_util = {}
 
--- Input for all functions:
--- https://lua-api.factorio.com/stable/concepts/SignalFilter.html
---
--- type: SignalIDType :: union
--- Union members
--- "item"
--- "fluid"
--- "virtual"
--- "entity"
--- "recipe"
--- "space-location"
--- "asteroid-chunk"
--- "quality"
-
--- https://lua-api.factorio.com/stable/concepts/ElemID.html
---
--- type: ElemType :: union
--- Union members
--- "achievement"
--- "decorative"
--- "entity"
--- "equipment"
--- "fluid"
--- "item"
--- "item-group"
--- "recipe"
--- "signal"
--- "technology"
--- "tile"
--- "asteroid-chunk"
--- "space-location"
--- "item-with-quality"
--- "entity-with-quality"
--- "recipe-with-quality"
--- "equipment-with-quality"
---
--- signal_type: SignalIDType
+-- Convert a SignalFilter to an ElemID, used in LuaGuiElements for smart
+-- tooltips.
+---@param filter SignalFilter
+---@return ElemID
 function signal_util.to_elem_id(filter)
+  ---@type string
   local signal_type = filter.type
   if signal_type == "virtual" then
     signal_type = "signal"
@@ -56,30 +24,12 @@ function signal_util.to_elem_id(filter)
   }
 end
 
--- https://lua-api.factorio.com/stable/concepts/SpritePath.html
--- Union members
--- "item"
--- "entity"
--- "technology"
--- "recipe"
--- "fluid"
--- "tile"
--- "item-group"
--- "virtual-signal"
--- "shortcut"
--- "achievement"
--- "equipment"
--- "ammo-category"
--- "decorative"
--- "space-connection"
--- "space-location"
--- "surface"
--- "airborne-pollutant"
--- "asteroid-chunk"
--- "quality"
--- "file"
--- "utility"
+-- Convert a SignalFilter to a SpritePath, used in LuaGuiElements for loading
+-- sprites.
+---@param filter SignalFilter
+---@return SpritePath
 function signal_util.to_sprite_path(filter)
+  ---@type string
   local signal_type = filter.type
   if signal_type == "virtual" then
     signal_type = "virtual-signal"
@@ -87,19 +37,12 @@ function signal_util.to_sprite_path(filter)
   return signal_type .. "/" .. filter.name
 end
 
--- https://lua-api.factorio.com/stable/classes/LuaPrototypes.html
---
--- key :: union
--- Union members
--- "item"
--- "fluid"
--- "virtual_signal"
--- "entity"
--- "recipe"
--- "space_location"
--- "asteroid_chunk"
--- "quality"
+-- Convert a SignalFilter to a LuaPrototypeBase subclass, used to lookup the
+-- localised_name of the prototype.
+---@param filter SignalFilter
+---@return LuaPrototypeBase
 function signal_util.to_prototype(filter)
+  ---@type string
   local signal_type = filter.type
   if signal_type == "virtual" then
     signal_type = "virtual_signal"

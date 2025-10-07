@@ -6,11 +6,15 @@ local util = require("scripts.util")
 
 local main_gui = {}
 
+-- Return true if the player has a valid main frame open.
+---@param player_index uint32
 function main_gui.valid(player_index)
   local guis = player_data(player_index).guis
   return guis.main and guis.main.valid
 end
 
+-- Destroy the main frame if it exists.
+---@param player_index uint32
 function main_gui.destroy(player_index)
   local data = player_data(player_index)
   if main_gui.valid(player_index) then
@@ -20,6 +24,8 @@ function main_gui.destroy(player_index)
   data.entities = {}
 end
 
+-- Build a new main frame for the player.
+---@param player LuaPlayer
 function main_gui.build(player)
   main_gui.destroy(player.index)
 
@@ -184,6 +190,9 @@ function main_gui.build(player)
   groups.populate_logistic_group(player)
 end
 
+-- Toggle the main frame for the player, opening a new frame if one does not
+-- exist, or closing it if it does.
+---@param player LuaPlayer
 function main_gui.toggle(player)
   if not main_gui.valid(player.index) then
     remote_view.enter(player)

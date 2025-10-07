@@ -6,6 +6,7 @@ local player_data = require("scripts.player_data")
 local main_gui = require("scripts.main_gui")
 
 script.on_init(function()
+  ---@type { [uint32]: PlayerData }
   storage.player_data = {}
 end)
 
@@ -13,9 +14,12 @@ local function is_event_valid(event)
   return event.element and main_gui.valid(event.player_index)
 end
 
+---@param event EventData.on_lua_shortcut | EventData.CustomInputEvent | EventData.on_gui_closed
 local function toggle(event)
   local player = game.get_player(event.player_index)
-  main_gui.toggle(player)
+  if player then
+    main_gui.toggle(player)
+  end
 end
 
 script.on_event(const.toggle_interface_id, toggle)
@@ -46,7 +50,9 @@ end)
 script.on_event(defines.events.on_player_display_scale_changed, function(event)
   if main_gui.valid(event.player_index) then
     local player = game.get_player(event.player_index)
-    main_gui.build(player)
+    if player then
+      main_gui.build(player)
+    end
   end
 end)
 
@@ -54,11 +60,15 @@ script.on_event(defines.events.on_gui_selection_state_changed, function(event)
   local guis = player_data(event.player_index).guis
   if is_event_valid(event) and event.element == guis.groups_list then
     local player = game.get_player(event.player_index)
-    groups.populate_logistic_group(player)
-    search.update_search_results(guis, player)
+    if player then
+      groups.populate_logistic_group(player)
+      search.update_search_results(guis, player)
+    end
   end
 end)
 
+-- Show the search box by hiding the delete button and resizing the name label.
+---@param guis Guis
 local function toggle_search_box(guis)
   -- Poor man's overlay textbox.
   if guis.search_box.visible then
@@ -85,10 +95,14 @@ script.on_event(defines.events.on_gui_click, function(event)
   end
   local guis = player_data(event.player_index).guis
   local player = game.get_player(event.player_index)
+  if not player then
+    return
+  end
   if event.element.parent == guis.members_table then
     entity_view.jump(player, event.element.tags)
   elseif event.element == guis.group_delete_button and player then
-    local group_name = guis.groups_list.get_item(guis.groups_list.selected_index)
+    -- We know we will get a string back, as that is what we pass in.
+    local group_name = guis.groups_list.get_item(guis.groups_list.selected_index) --[[@as string]]
     player.force.delete_logistic_group(group_name)
     main_gui.build(player)
   elseif event.element == guis.search_button then

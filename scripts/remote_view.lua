@@ -2,6 +2,9 @@ local player_data = require("scripts.player_data")
 
 local remote_view = {}
 
+-- Enter the remote view controller for the player, disabling the surface list
+-- window to make room for the main frame.
+---@param player LuaPlayer
 function remote_view.enter(player)
   player_data(player.index).player_view = {
     show_surface_list = player.game_view_settings.show_surface_list,
@@ -19,6 +22,11 @@ function remote_view.enter(player)
   end
 end
 
+-- Exit remote view, restoring the controller that existed before we entered
+-- remote view. Do not exit if requested not to with
+-- player_data.player_view.exit_remote_view = false, used when opening an entity
+-- GUI as remote view is required to not have the GUI close immediately.
+---@param player LuaPlayer
 function remote_view.exit(player)
   local player_view = player_data(player.index).player_view
 

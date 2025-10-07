@@ -3,6 +3,10 @@ local to_lower_func = helpers.compare_versions(helpers.game_version, "2.0.67") >
 
 local search = {}
 
+-- Hide members and filters based on matching the query to the name of the
+-- buttons.
+---@param guis Guis
+---@param player? LuaPlayer
 function search.update_search_results(guis, player)
   local query = guis.search_box.text
 
@@ -13,13 +17,9 @@ function search.update_search_results(guis, player)
       elseif member.tags.name == nil then
         member.visible = false
       else
-        if
-          player
-          and not member.tags.translated_name
-          and not member.tags.translation_req_id
-          and member.tags.localised_name
-        then
-          local tags = member.tags
+        ---@type SignalData
+        local tags = member.tags
+        if player and not tags.translated_name and not tags.translation_req_id and tags.localised_name then
           tags.translation_req_id = player.request_translation(member.tags.localised_name)
           -- Note that the API returns tags as a simple table, meaning any
           -- modifications to it will not propagate back to the game. Thus, to
@@ -27,15 +27,19 @@ function search.update_search_results(guis, player)
           -- the respective property.
           member.tags = tags
         end
-        member.visible = string.find(to_lower_func(member.tags.name), to_lower_func(query), 1, true) ~= nil
+        member.visible = string.find(to_lower_func(tags.name), to_lower_func(query), 1, true) ~= nil
         if not member.visible and member.tags.translated_name then
-          member.visible = string.find(to_lower_func(member.tags.translated_name), to_lower_func(query), 1, true) ~= nil
+          member.visible = string.find(to_lower_func(tags.translated_name), to_lower_func(query), 1, true) ~= nil
         end
       end
     end
   end
 end
 
+-- Store translated strings in the button tags when our string translation
+-- request comes back.
+---@param guis Guis
+---@param event EventData.on_string_translated
 function search.update_string_translation(guis, event)
   for _, table in ipairs({ guis.members_table.children, guis.filters_table.children }) do
     for _, member in pairs(table) do

@@ -2,6 +2,8 @@ local player_data = require("scripts.player_data")
 
 local entity_view = {}
 
+-- Destroy the entity view window if it exists.
+---@param player_index uint32
 function entity_view.destroy(player_index)
   local guis = player_data(player_index).guis
   if guis.entity_preview and guis.entity_preview.valid then
@@ -9,6 +11,9 @@ function entity_view.destroy(player_index)
   end
 end
 
+-- Build a new entity view window inside the main frame.
+---@param player_index uint32
+---@param entity_data EntityData
 function entity_view.build(player_index, entity_data)
   entity_view.destroy(player_index)
 
@@ -34,6 +39,10 @@ function entity_view.build(player_index, entity_data)
   end
 end
 
+-- Jump to the viewed entity in the remote view window, and close the entity
+-- view if not exiting the main frame.
+---@param player LuaPlayer
+---@param entity_data EntityData
 function entity_view.jump(player, entity_data)
   local data = player_data(player.index)
   player.set_controller({

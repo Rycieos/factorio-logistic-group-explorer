@@ -5,6 +5,19 @@ local util = require("scripts.util")
 
 local groups = {}
 
+---@class SignalData
+---@field name? string
+---@field localised_name? LocalisedString
+---@field translation_req_id? uint32
+---@field translated_name? string
+
+---@class EntityData: SignalData
+---@field entity_index uint32
+---@field surface uint32
+---@field position MapPosition
+
+-- Fill the member and filter tables with sprite buttons.
+---@param player LuaPlayer
 function groups.populate_logistic_group(player)
   local data = player_data(player.index)
   local guis = data.guis
@@ -22,7 +35,8 @@ function groups.populate_logistic_group(player)
     return
   end
 
-  local group_name = guis.groups_list.get_item(guis.groups_list.selected_index)
+  -- We know we will get a string back, as that is what we pass in.
+  local group_name = guis.groups_list.get_item(guis.groups_list.selected_index) --[[@as string]]
   data.last_group = group_name
   guis.group_label.caption = group_name
 
@@ -77,6 +91,7 @@ function groups.populate_logistic_group(player)
         tooltip = tooltip,
         toggled = false,
         quality = entity.quality.name,
+        ---@type EntityData
         tags = {
           name = name,
           localised_name = localised_name,
@@ -145,6 +160,7 @@ function groups.populate_logistic_group(player)
         tooltip = tooltip,
         toggled = false,
         number = filter.min,
+        ---@type SignalData
         tags = {
           name = type_prototype.name,
           localised_name = type_prototype.localised_name,
@@ -207,9 +223,6 @@ function groups.populate_logistic_group(player)
         type = "sprite-button",
         style = "slot_button",
         toggled = false,
-        tags = {
-          name = nil,
-        },
       })
     end
   end
