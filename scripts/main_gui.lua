@@ -83,6 +83,7 @@ function main_gui.build(player)
     local last_group_index = util.find(logistic_groups, last_group)
     if last_group_index > 0 then
       guis.groups_list.selected_index = last_group_index
+      guis.groups_list.scroll_to_item(last_group_index, "top-third")
     end
   end
 
